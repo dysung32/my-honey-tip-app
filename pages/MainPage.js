@@ -68,6 +68,9 @@ export default function MainPage({navigation, route}) {
     <ScrollView style={styles.container}>
       <StatusBar style="black" />
       <Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition}</Text>
+      <TouchableOpacity style={styles.btnAbout} onPress={() => navigation.navigate("About Page")}>
+        <Text style={styles.btnAboutText}>소개 페이지</Text>
+      </TouchableOpacity>
       <Image style={styles.imageStyle} source={main} />
       <ScrollView style={styles.middleContainer} horizontal={true}>
         <TouchableOpacity style={styles.middleButtonAll} onPress={() => {category('전체 보기')}}>
@@ -82,8 +85,8 @@ export default function MainPage({navigation, route}) {
         <TouchableOpacity style={styles.middleButton3} onPress={() => {category('반려견')}}>
           <Text style={styles.middleButtonText} onPress={() => {category('반려견')}}>반려견</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.middleButton4} onPress={() => {category('꿀팁 찜')}}>
-          <Text style={styles.middleButtonText} onPress={() => {category('꿀팁 찜')}}>꿀팁 찜</Text>
+        <TouchableOpacity style={styles.middleButton4} onPress={() => {navigation.navigate("Like Page")}}>
+          <Text style={styles.middleButtonText}>꿀팁 찜</Text>
         </TouchableOpacity>
       </ScrollView>
       <View style={styles.cardContainer}>
@@ -103,10 +106,25 @@ const styles = StyleSheet.create({
     // 앱의 배경 색
     backgroundColor: "#fff"
   },
-  weather:{
+  weather: {
     alignSelf: "flex-end",
     paddingRight: 20,
     marginBottom: 10
+  },
+  btnAbout: {
+    width: 90,
+    height: 30,
+    backgroundColor: "pink",
+    borderRadius: 15,
+    marginRight: 20,
+    marginBottom: 7,
+    padding: 6,
+    alignSelf: "flex-end"
+  },
+  btnAboutText: {
+    color: "#fff",
+    fontWeight: "700",
+    textAlign: "center"
   },
   imageStyle: {
     width: "90%", // 컨텐츠의 넓이 값
@@ -118,7 +136,7 @@ const styles = StyleSheet.create({
     borderWidth: 3
   },
   middleContainer: {
-    paddingLeft: 7,
+    marginHorizontal: 7,
     height: 60,
     marginTop: 10
   },
@@ -126,7 +144,7 @@ const styles = StyleSheet.create({
     width: 90,
     height: 47,
     padding: 15,
-    backgroundColor: "#fdc453",
+    backgroundColor: "#20b2aa",
     borderRadius: 15,
     margin: 7
   },

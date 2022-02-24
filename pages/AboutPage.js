@@ -1,9 +1,22 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native'
+import { StatusBar } from 'expo-status-bar';
 
-export default function AboutPage(){
+export default function AboutPage({navigation, route}){
+  useEffect(() => {
+    navigation.setOptions({
+      title: "소개 페이지",
+      headerStyle: {
+        backgroundColor: "#1F266A",
+        shadowColor: "#1F266A",
+      },
+      headerTintColor: "#fff"
+    });
+  },[])
+
 return (
 <View style={styles.container}>
+  <StatusBar style="black" />
   <Text style={styles.title}>
     Hi! 나만의 꿀팁 앱에 오신 것을 환영합니다
   </Text>

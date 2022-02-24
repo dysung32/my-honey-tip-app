@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-export default function Loading(){
-    return(
+export default function Loading() {
+  return(
     <View style={styles.container}>
       <Text style={styles.title}>준비중입니다...</Text>
     </View>)
