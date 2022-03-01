@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import main from '../assets/main.jpg';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
 import { StatusBar } from 'expo-status-bar';
-import { borderColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+import * as Location from 'expo-location';
+import axios from 'axios';
 
 export default function MainPage({navigation, route}) {
   console.disableYellowBox = true;
@@ -27,11 +28,17 @@ export default function MainPage({navigation, route}) {
   // 상태 데이터를 관리하기 위해 또 하나의 상태를 선언
   const [ready, setReady] = useState(true);
 
-  // 하단의 return 문이 실행되어 화면이 그려진 다음 실행되는 useEffect 함수
+  // 날씨 데이터 상태 관리 상태 생성
+  const [weather, setWeather] = useState({
+    temp: 0,
+    condition: ''
+  })
+
+  // 하단의 return 문이 실행되어 화면이 그려진 다음 바로 실행되는 useEffect 함수
   // 내부에서 data.json으로부터 가져온 데이터를 state 상태에 담고 있음.
   useEffect(()=>{
 
-    setTimeout(()=> { // 1000 ms 뒤에 함수 실행(지연 함수)
+    setTimeout(()=> { // 1500 ms 뒤에 함수 실행(지연 함수)
       // 상태 관리에 들어간다
       // 헤더의 타이틀 변경
       navigation.setOptions({
@@ -41,10 +48,43 @@ export default function MainPage({navigation, route}) {
       let tip = data.tip;
       setState(tip) // 꿀팁 전체를 상태 관리 저장
       setCateState(tip)
+      getLocation()
       setReady(false) // 준비가 끝남 (상태가 변경되면 화면이 다시 그려짐)
     }, 1500)
 
   },[])
+
+  const getLocation = async () => {
+    // 수많은 로직 중에 에러가 발생하면
+    // 해당 에러를 포착하여 로직을 멈추고, 에러를 해결하기 위한 catch 영역 로직이 실행
+    try {
+      // 자바스크립트 함수의 순차적 실행순서를 고정하기 위해 쓰는 async, await
+      await Location.requestForegroundPermissionsAsync(); // 위치 허용 요청
+      const locationData = await Location.getCurrentPositionAsync(); // 현재 위치 좌표 가져오기
+      console.log(locationData);
+      const latitude = locationData['coords']['latitude'];
+      const longitude = locationData['coords']['longitude'];
+      const API_KEY = "cfc258c75e1da2149c33daffd07a911d";
+      const result = await axios.get(
+        "http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric"
+      );
+      console.log(result);
+      const temp = result.data.main.temp;
+      const condition = result.data.weather[0].main;
+
+      console.log(temp);
+      console.log(condition);
+
+      // 오랜만에 복습해보는 객체 리터럴 방식으로 딕셔너리 구성하기
+      setWeather({
+        temp, condition
+      })
+
+    } catch (error) {
+      // 혹시나 위치를 못 가져올 경우를 대비해서 안내를 준비함
+      Alert.alert("위치를 찾을 수가 없습니다.", "앱을 껐다 켜볼까요?");
+    }
+  }
 
   const category = (cate) => {
     if(cate == "전체 보기") {
@@ -67,7 +107,7 @@ export default function MainPage({navigation, route}) {
   return ready ? <Loading /> : (
     <ScrollView style={styles.container}>
       <StatusBar style="black" />
-      <Text style={styles.weather}>오늘의 날씨: {todayWeather + '°C ' + todayCondition}</Text>
+      <Text style={styles.weather}>오늘의 날씨: {weather.temp + '°C ' + weather.condition}</Text>
       <TouchableOpacity style={styles.btnAbout} onPress={() => navigation.navigate("About Page")}>
         <Text style={styles.btnAboutText}>소개 페이지</Text>
       </TouchableOpacity>
