@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flex: 1 // 화면 전체를 1의 비율만큼 차지
   },
   title: {
-    marginTop: 70,
+    marginTop: 30,
     marginBottom: 50,
     marginHorizontal: 40,
     color: "#fff",
@@ -54,14 +54,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     width: 300,
-    height: 500,
+    height: 470,
     borderRadius: 30
   },
   mainImage: {
     width: 150,
     height: 150,
     borderRadius: 30,
-    marginTop: 70,
+    marginTop: 50,
     marginBottom: 20
   },
   middleText: {

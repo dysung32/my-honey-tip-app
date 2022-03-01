@@ -24,31 +24,31 @@ export default function MainPage({navigation, route}) {
   // 카테고리에 따라 다른 꿀팁을 그때그때 저장 관리할 상태
   const [cateState, setCateState] = useState([]);
 
-  // 현재 준비 상태인지, 준비를 끝낸 상태인지의
-  // 상태 데이터를 관리하기 위해 또 하나의 상태를 선언
-  const [ready, setReady] = useState(true);
-
   // 날씨 데이터 상태 관리 상태 생성
   const [weather, setWeather] = useState({
     temp: 0,
     condition: ''
   })
 
-  // 하단의 return 문이 실행되어 화면이 그려진 다음 바로 실행되는 useEffect 함수
-  // 내부에서 data.json으로부터 가져온 데이터를 state 상태에 담고 있음.
-  useEffect(()=>{
+  // 현재 준비 상태인지, 준비를 끝낸 상태인지의
+  // 상태 데이터를 관리하기 위해 또 하나의 상태를 선언
+  const [ready, setReady] = useState(true);
 
+  // 하단의 return 문이 실행되어 화면이 그려진 다음 바로 실행되는 useEffect 함수
+  // 내부에서 data.json으로부터 가져온 데이터를 state 상태에 담고 있음
+  useEffect(()=>{
+    // 헤더의 타이틀 변경
+    navigation.setOptions({
+      title: "나만의 꿀팁"
+    })
     setTimeout(()=> { // 1500 ms 뒤에 함수 실행(지연 함수)
       // 상태 관리에 들어간다
-      // 헤더의 타이틀 변경
-      navigation.setOptions({
-        title: "나만의 꿀팁"
-      })
+      
       // 꿀팁 데이터로 모두 초기화 준비
       let tip = data.tip;
+      getLocation()
       setState(tip) // 꿀팁 전체를 상태 관리 저장
       setCateState(tip)
-      getLocation()
       setReady(false) // 준비가 끝남 (상태가 변경되면 화면이 다시 그려짐)
     }, 1500)
 
@@ -66,7 +66,7 @@ export default function MainPage({navigation, route}) {
       const longitude = locationData['coords']['longitude'];
       const API_KEY = "cfc258c75e1da2149c33daffd07a911d";
       const result = await axios.get(
-        "http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric"
+        `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
       );
       console.log(result);
       const temp = result.data.main.temp;
@@ -99,9 +99,9 @@ export default function MainPage({navigation, route}) {
   }
 
   // data.json 데이터는 state에 담기므로 상태에서 꺼내옴
-  let tip = state.tip;
-  let todayWeather = 10 + 17;
-  let todayCondition = "맑음";
+  // let tip = state.tip;
+  // let todayWeather = 10 + 17;
+  // let todayCondition = "맑음";
 
   // ready 상태가 true면 : 앞부분 실행 false면 : 뒷부분 실행
   return ready ? <Loading /> : (
