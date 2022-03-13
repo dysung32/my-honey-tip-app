@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import main from '../assets/main.jpg';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
-import data from '../data.json';
+// import data from '../data.json';
 import Card from '../components/Card';
 import Loading from '../components/Loading';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
 import axios from 'axios';
+import {firebase_db} from '../firebaseConfig';
 
 export default function MainPage({navigation, route}) {
   console.disableYellowBox = true;
@@ -45,11 +46,14 @@ export default function MainPage({navigation, route}) {
       // 상태 관리에 들어간다
       
       // 꿀팁 데이터로 모두 초기화 준비
-      let tip = data.tip;
-      getLocation()
-      setState(tip) // 꿀팁 전체를 상태 관리 저장
-      setCateState(tip)
-      setReady(false) // 준비가 끝남 (상태가 변경되면 화면이 다시 그려짐)
+      firebase_db.ref('/tip').once('value').then((snapshot) => {
+        console.log("파이어베이스에서 데이터 가져옴")
+        let tip = snapshot.val()
+        getLocation()
+        setState(tip) // 꿀팁 전체를 상태 관리 저장
+        setCateState(tip)
+        setReady(false) // 준비가 끝남 (상태가 변경되면 화면이 다시 그려짐)
+      })      
     }, 1500)
 
   },[])
